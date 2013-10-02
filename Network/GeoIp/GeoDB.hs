@@ -48,7 +48,7 @@ setupSegments geo cursor sizeRead
 		else
 			setupSegments geo (cursor - 4) (sizeRead + 4)
 
-getNumber :: forall b. (Bits b) => B.ByteString -> b
+getNumber :: forall b. (Num b, Bits b) => B.ByteString -> b
 getNumber bytes = fst $ B.foldl combine (0, 0) bytes
 	where
 		combine (num, pos) b = (num + ((fromIntegral b) `shiftL` (pos*8)), pos + 1)
@@ -63,10 +63,10 @@ extractNullString memo =
 getBytes :: Int -> B.ByteString -> (B.ByteString, B.ByteString)
 getBytes num memo = (B.take num memo, B.drop num memo)
 
-seekRecord :: forall a m. (Bits a, Monad m) => GeoDB -> a -> m (Int, Int)
+seekRecord :: forall a m. (Num a, Bits a, Monad m) => GeoDB -> a -> m (Int, Int)
 seekRecord geo ipNum = seekRecord_ geo 31 0 ipNum
 
-seekRecord_ :: forall a m. (Bits a, Monad m) => GeoDB -> Int -> Int -> a -> m (Int, Int)
+seekRecord_ :: forall a m. (Num a, Bits a, Monad m) => GeoDB -> Int -> Int -> a -> m (Int, Int)
 seekRecord_ geo depth offset ipNum
 	| depth < 0 = fail "Could not find record.  Database is possibly corrupt"
 	| otherwise =
