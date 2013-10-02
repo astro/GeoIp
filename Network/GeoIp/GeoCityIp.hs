@@ -8,7 +8,6 @@ module Network.GeoIp.GeoCityIp (
 	findLocation) where
 
 import qualified Data.ByteString as B
-import Data.Int
 import Data.Bits
 
 import Network.GeoIp.GeoDB
